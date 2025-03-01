@@ -1,5 +1,6 @@
 from sqlalchemy import create_engine
 import json
+import os
 import pandas as pd
 
 #Directory of the desired file lcoation
@@ -10,19 +11,27 @@ port     = "3306"
 database = "football_analysis"    
 table_name = "competitions"
 
+
 # Read JSON file
-with open('competitions.json', "r") as file:
+with open(r'D:\Gowtham\learnings\my_project\load_json_data/competitions.json', "r") as file:
     data = json.load(file)
 
 # Write JSON file
 with open('data.py', "w") as f:
     json.dump(data, f, indent=True)
 
-
-
 # Read JSON using pandas
 def extract():
-    df = pd.read_json("competitions.json")
+    df = pd.read_json(r'D:\Gowtham\learnings\my_project\load_json_data/competitions.json')
+    print(df)
+    transform(df)
+
+# Transaform JSON using pandas
+def transform(df):
+    # Standardize column names
+    df.columns = df.columns.str.lower().str.replace(" ", "_")
+    # Handle missing values
+    df.fillna(0, inplace=True)  # Replace NaN with 0 (or use df.dropna())
     print(df)
     load(df)
 
